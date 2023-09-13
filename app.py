@@ -4,6 +4,7 @@ from magick import Magick
 app = Magick()
 
 
+# Database Interactions
 def get_posts_from_database(post_id: int = None) -> list[dict[str, str]]:
     cursor = conn.cursor()
     fields = ('id', 'title', 'content', 'author')
@@ -19,6 +20,8 @@ def add_new_post(new_post: dict) -> None:
     conn.commit()
 
 
+
+# Blogs route
 @app.route('^/$', template="list.template.html")
 def index():
     posts = get_posts_from_database()
@@ -30,7 +33,6 @@ def post_detail(id: str):
     post = get_posts_from_database(post_id=id)[0]
     return {'post': post}
     
-
 
 @app.route('^/new$', template="form.template.html")
 def new():
