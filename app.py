@@ -28,14 +28,15 @@ def post_detail(id: str):
     
 
 
-# @app.route('^/new$')
-# def somente_new():
-#     return "<h1>A URL desta página só contém digitos!</h1>"
+@app.route('^/new$', template="form.template.html")
+def new():
+    return {}
 
 
-# @app.route('^/api$')
-# def somente_new():
-#     return {'message': 'Eu sou uma api'}
+@app.route('^/new$', method="POST")
+def new_post(form):
+    post = {item.name: item.value for item in form.list}
+    return post
 
 
 
