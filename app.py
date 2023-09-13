@@ -1,4 +1,3 @@
-import httpx
 from database import conn
 from magick import Magick
 
