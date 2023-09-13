@@ -20,9 +20,12 @@ def index():
     posts = get_posts_from_database()
     return { 'post_list': posts }
 
-# @app.route('^/(?P<id>\d{1,})$', template="post.template.html")
-# def somente_digito(id: str):
-#     return "<h1>A URL desta página só contém digitos!</h1>"
+
+@app.route('^/(?P<id>\d{1,})$', template="post.template.html")
+def post_detail(id: str):
+    post = get_posts_from_database(post_id=id)[0]
+    return {'post': post}
+    
 
 
 # @app.route('^/new$')
