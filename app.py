@@ -1,3 +1,4 @@
+import httpx
 from database import conn
 from magick import Magick
 
@@ -13,6 +14,10 @@ def get_posts_from_database(post_id: int = None) -> list[dict[str, str]]:
         results = cursor.execute('SELECT * FROM post;')
     return [dict(zip(fields, post)) for post in results]
 
+def add_new_post(new_post: dict) -> None:
+    cursor = conn.cursor()
+    cursor.execute(f"INSERT INTO post (title, content, author) VALUES (:title, :content, :author)", new_post)
+    conn.commit()
 
 
 @app.route('^/$', template="list.template.html")
@@ -33,10 +38,15 @@ def new():
     return {}
 
 
-@app.route('^/new$', method="POST")
+@app.route('^/new$', method="POST", template="list.template.html")
 def new_post(form):
+    # Getting and Setting the new post to the Database
     post = {item.name: item.value for item in form.list}
-    return post
+    add_new_post(post)
+
+    # Get all posts from de database
+    posts = get_posts_from_database()
+    return { 'post_list': posts }
 
 
 
