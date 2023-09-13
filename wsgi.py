@@ -17,12 +17,12 @@ def get_posts_from_database(post_id: int = None) -> list[dict[str, str]]:
         results = cursor.execute('SELECT * FROM post;')
     return [dict(zip(fields, post)) for post in results]
 
-async def get_posts_from_surreldb(post_id: int = None):
-    if post_id:
-        results = SurrealDB.query(f'SELECT * FROM post WHERE id = {post_id};')
-    else:
-        results = SurrealDB.query('SELECT * FROM posts;')
-    return results
+# async def get_posts_from_surreldb(post_id: int = None):
+#     if post_id:
+#         results = SurrealDB.query(f'SELECT * FROM post WHERE id = {post_id};')
+#     else:
+#         results = SurrealDB.query('SELECT * FROM posts;')
+#     return results
 
 
 def render_template(template_name: str, **context) -> str:
