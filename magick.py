@@ -49,9 +49,31 @@ class Magick:
             if (match := re.match(rule, path)):
                 if method != request_method:
                     continue
+                
                 view_args = match.groupdict()
+
+                if method == "POST":
+                    view_args["form"] = cgi.FieldStorage(
+                        fp = environ['wsgi.input'],
+                        environ = environ,
+                        keep_blank_values=1
+                    )
+                
                 view_result = view(**view_args)
-                body = view_result.encode('utf-8')
+
+                # Tratamento do retorno da função
+                if isinstance(view_result, tuple):
+                    view_result, status, content_type = view_result
+                else:
+                    status = "200 OK"
+                
+                if template:
+                    body = self.render_template(template, **view_result)
+                elif (isinstance(view_result, dict) and content_type == "application/json"):
+                    body = json.dumps(view_result).encode('utf-8')
+                else:
+                    body = str(view_result).encode('utf-8')
+                
 
         # Criar o response
         headers = [("Content-type", content_type)]
