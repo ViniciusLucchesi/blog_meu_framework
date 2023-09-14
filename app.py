@@ -49,6 +49,15 @@ def new_post(form):
     posts = get_posts_from_database()
     return { 'post_list': posts }
 
+@app.route('^/api$')
+def api():
+    posts = get_posts_from_database()
+    return (
+        {"post_list": posts},
+        "200 OK",
+        "application/json"
+    )
+
 
 
 if __name__ == '__main__':
