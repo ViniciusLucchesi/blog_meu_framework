@@ -59,11 +59,11 @@ async def application(environ, start_response):
         body = json.dumps(posts).encode()
         status = "200 OK"
 
-    elif path == "/api/surreal" and method == "GET":
-        posts = await get_posts_from_surreldb()
-        content_type = "application/json"
-        body = json.dumps(posts).encode()
-        status = "200 OK"
+    # elif path == "/api/surreal" and method == "GET":
+    #     posts = await get_posts_from_surreldb()
+    #     content_type = "application/json"
+    #     body = json.dumps(posts).encode()
+    #     status = "200 OK"
 
     elif path.split("/")[-1].isdigit() and method == "GET":
         status = "200 OK"
