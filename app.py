@@ -19,6 +19,14 @@ def add_new_post(new_post: dict) -> None:
     cursor.execute(f"INSERT INTO post (title, content, author) VALUES (:title, :content, :author)", new_post)
     conn.commit()
 
+def delete_post(post_id: int) -> dict | None:
+    cursor = conn.cursor()
+    try:
+        cursor.execute(f'DELETE FROM post WHERE id = :post_id', post_id)
+        conn.commit()
+        return ({'msg': f'Post {post_id} deletado com sucesso!'}, "200 OK", "application/json")
+    except Exception as error:
+        return ({"error": f"Não foi possível deletar o id {post_id}"}, "500 Internal Server Error", "application/json")
 
 
 # Blogs route
@@ -49,6 +57,7 @@ def new_post(form):
     posts = get_posts_from_database()
     return { 'post_list': posts }
 
+
 @app.route('^/api$')
 def api():
     posts = get_posts_from_database()
@@ -58,6 +67,16 @@ def api():
         "application/json"
     )
 
+
+@app.route('^/delete/(?P<id>\d{1,})$')
+def delete(id: str):
+    try:
+        _ = get_posts_from_database(post_id=id)[0]
+    except Exception:
+        return ({'error': 'Post não encontrado!'}, "404 Not Found", "application/json")
+    
+    result = delete_post(id)
+    return result
 
 
 if __name__ == '__main__':
